@@ -10,10 +10,12 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "Ascend"
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME || "natacao",
+    port: process.env.DB_PORT || 3306,
+    ssl: process.env.DB_HOST ? { rejectUnauthorized: false } : null
 });
 
 db.connect((erro) => {
@@ -23,7 +25,25 @@ db.connect((erro) => {
         return;
     }
     console.log("Conectado com sucesso");
-})
+    const criarTabelaSQL = ` 
+CREATE TABLE IF NOT EXISTS alunos1 (
+  id int auto_increment primary key,
+  nome varchar(70) not null,
+  idade int not null,
+  telefone varchar(20) not null,
+  nivel varchar(50) not null,
+  horario varchar(50) not null,
+  ativo boolean default true
+);
+    `;
+    db.query(criarTabelaSQL, (erroTabela => {
+        if(erroTabela) {
+            console.log("Erro de verificação ou criação da tabela", erroTabela);
+        } else {
+            console.log("Tabela pronta para uso")
+        }
+    }))
+});
 
 let i = 1
 

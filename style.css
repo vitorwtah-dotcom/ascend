@@ -818,6 +818,21 @@ button:hover {
 .Cadast {
     width: 200px;
     height: 100px;
+    transition: 0.3s;
+}
+
+.Cadast:hover{
+    transform: scale(1.1);
+    box-shadow: 10px 10px  white;
+    filter: brightness(1.5);
+}
+
+#faca{
+    transition: 0.3s;
+}
+#faca:hover{
+    filter: brightness(20);
+    transform: scale(1.1);
 }
 
 .aqui {
