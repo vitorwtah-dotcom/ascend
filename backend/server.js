@@ -26,12 +26,15 @@ db.connect((erro) => {
     }
     console.log("Conectado com sucesso");
     const criarTabelaSQL = ` 
-    CREATE TABLE IF NOT EXISTS usuarios1 ( 
-    id int auto_increment primary key,
-    nome varchar(70) not null,
-    email varchar(100) unique not null,
-    senha varchar(30) not null,
-    confirmarSenha(30) not null
+   create table if not exists usuarios2 ( 
+  id int auto_increment primary key,
+  nome varchar(70) not null,
+  email varchar(100) unique not null,
+  senha varchar(30) not null,
+  confirmarSenha(30) not null,
+  tentativas_admin INT DEFAULT 0,
+  admin_bloqueado BOOLEAN DEFAULT FALSE,
+  ativo boolean default true
 );
     `;
     db.query(criarTabelaSQL, (erroTabela => {
@@ -69,7 +72,7 @@ app.post("/usuarios", (req, res) => {
         })
     }
 
-    const verificaSQL = "SELECT * FROM usuarios1 WHERE email = ?";
+    const verificaSQL = "SELECT * FROM usuarios2 WHERE email = ?";
     db.query(verificaSQL, [email],
         (erro, resultado) => {
             if (erro) {
@@ -80,11 +83,11 @@ app.post("/usuarios", (req, res) => {
                     erro: "Já existe esse email cadastrado! "
                 })
             }
-            const inserirSQL = `INSERT INTO usuarios1 (nome, email, senha)
+            const inserirSQL = `INSERT INTO usuarios2 (nome, email, senha, confirmarSenha)
             VALUES (?,?,?)`
             db.query(
                 inserirSQL,
-                [nome, email, senha],
+                [nome, email, senha, confirmarSenha],
                 (erro, resultado) => {
                     if (erro) {
                         return res.status(500).json(erro);
@@ -102,7 +105,7 @@ app.post("/usuarios", (req, res) => {
 
 app.get("/usuarios", (req, res) => {
     db.query(
-        "SELECT * FROM usuarios1", (erro, resultado) => {
+        "SELECT * FROM usuarios2", (erro, resultado) => {
             if (erro) {
                 return res.status(500).json(erro);
             }
@@ -113,7 +116,7 @@ app.get("/usuarios", (req, res) => {
 
 app.delete("/usuarios/:id", (req, res) => {
     const id = req.params.id;
-    db.query("DELETE FROM usuarios1 WHERE id = ?",
+    db.query("DELETE FROM usuarios2 WHERE id = ?",
         [id], (erro, resultado) => {
             if (erro) {
                 return res.status(500).json(erro);
@@ -131,7 +134,7 @@ app.delete("/usuarios/:id", (req, res) => {
 
 app.put("/usuarios/:id", (req, res) => {
     const id = req.params.id;
-    db.query("SELECT ativo FROM usuarios1 WHERE id = ?", [id], (erro, resultado) => {
+    db.query("SELECT ativo FROM usuarios2 WHERE id = ?", [id], (erro, resultado) => {
         if (erro) {
             return res.status(500).json(erro);
         }
@@ -143,7 +146,7 @@ app.put("/usuarios/:id", (req, res) => {
         const novoStatus =
             resultado[0].ativo ? 0 : 1;
 
-        db.query("UPDATE usuarios1 SET ativo = ? WHERE id = ?", [novoStatus, id], (erro) => {
+        db.query("UPDATE usuarios2 SET ativo = ? WHERE id = ?", [novoStatus, id], (erro) => {
             if (erro) {
                 return res.status(500).json(erro);
             }
@@ -200,7 +203,7 @@ app.get("/usuarios/:id", (req, res) => {
     const { id } = req.params;
 
     db.query(
-        "SELECT nome FROM usuarios1 WHERE id = ?",
+        "SELECT nome FROM usuarios2 WHERE id = ?",
         [id],
         (erro, resultado) => {
             if (erro) {
@@ -228,7 +231,7 @@ app.post("/login", (req, res) => {
     }
 
     db.query(
-        "SELECT * FROM usuarios1 WHERE email = ?",
+        "SELECT * FROM usuarios2 WHERE email = ?",
         [email],
         (erro, resultado) => {
             if (erro) {
