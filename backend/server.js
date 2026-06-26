@@ -32,6 +32,7 @@ create table if not exists usuarios (
   nome varchar(70) not null,
   email varchar(100) unique not null,
   senha varchar(30) not null,
+  confirmarSenha(30) not null,
   tentativas_admin INT DEFAULT 0,
   admin_bloqueado BOOLEAN DEFAULT FALSE,
   ativo boolean default true
