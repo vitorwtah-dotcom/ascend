@@ -26,18 +26,13 @@ db.connect((erro) => {
     }
     console.log("Conectado com sucesso");
     const criarTabelaSQL = ` 
-
-CREATE TABLE IF NOT EXISTS usuarios ( 
-  id int auto_increment primary key,
-  nome varchar(70) not null,
-  email varchar(100) unique not null,
-  senha varchar(30) not null,
-  confirmarSenha(30) not null,
-  tentativas_admin INT DEFAULT 0,
-  admin_bloqueado BOOLEAN DEFAULT FALSE,
-  ativo boolean default true
+    CREATE TABLE IF NOT EXISTS usuarios ( 
+    id int auto_increment primary key,
+    nome varchar(70) not null,
+    email varchar(100) unique not null,
+    senha varchar(30) not null,
+    confirmarSenha(30) not null
 );
-
     `;
     db.query(criarTabelaSQL, (erroTabela => {
         if (erroTabela) {
