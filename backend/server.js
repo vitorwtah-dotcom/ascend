@@ -26,18 +26,39 @@ db.connect((erro) => {
     }
     console.log("Conectado com sucesso");
     const criarTabelaSQL = ` 
-CREATE TABLE IF NOT EXISTS alunos1 (
+
+create table if not exists usuarios ( 
   id int auto_increment primary key,
   nome varchar(70) not null,
-  idade int not null,
-  telefone varchar(20) not null,
-  nivel varchar(50) not null,
-  horario varchar(50) not null,
+  email varchar(100) unique not null,
+  senha varchar(30) not null,
+  tentativas_admin INT DEFAULT 0,
+  admin_bloqueado BOOLEAN DEFAULT FALSE,
   ativo boolean default true
 );
+
+
+create table if not exists videos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(100) NOT NULL,
+  descricao TEXT,
+  video VARCHAR(255) NOT NULL,
+  thumbnail VARCHAR(255) NOT NULL,
+  usuario_id INT NOT NULL,
+  data_postagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+  
+  
+ FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+create table if not exists adm (
+senha varchar (40)
+);
+ 
+insert into adm  (senha) values("12345678");
     `;
     db.query(criarTabelaSQL, (erroTabela => {
-        if(erroTabela) {
+        if (erroTabela) {
             console.log("Erro de verificação ou criação da tabela", erroTabela);
         } else {
             console.log("Tabela pronta para uso")
