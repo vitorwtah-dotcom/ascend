@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+    <header id="cabecalho">
+        <div>
+            <button id="buttonGerar" onclick="gerarMensagem()">Motivação</button>
+            <input type="text" id="mensagem" placeholder="Inspire-se...">
+        </div>
+        <div id="divPerfil"><i class="fa-solid fa-user" id="icone" onclick="window.location.href='perfil.html'"></i><span id="msperfil" style="display: none;">   Perfil</span></div>
+    </header>
+    <aside id="menuLateral">
+        <h3 onclick="window.location.href='feed.html'">Home</h3>
+        <h3 onclick="window.location.href='adm.html'">Área de Administração</h3>
+        <h3 onclick="window.location.href='postar.html'">Postar</h3>
+    </aside>
+    <main id="conteudo">
+        <div id="videos">
+          
+        </div>
+    </main>
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

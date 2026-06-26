@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="login" class="card">
+            <h1 id="h1Adm">Acesso Restrito</h1>
+            <p>Digite sua senha de admin</p>
+            <form onsubmit="conferirAdm(event)">
+                <input type="password" id="senha" placeholder="Digite sua senha..." required>
+                <button type="submit" id="acessar">Acessar</button>
+            </form>
+        </div>
+        <div id="conteudo" style="display: none;">
+            <h1>Painel do Adm</h1>
+            <strong>Veja as estatisticas de cadastro</strong>
+            <div class="lista" id="lista">
+
+            </div>
+            <div class="estatisticas" id="estatisticas">
+
+            </div>
+            <br>
+            <br>
+            <button id="botaosair" onclick="logoutAdm()">Sair</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
