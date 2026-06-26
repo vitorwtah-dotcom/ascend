@@ -35,9 +35,18 @@ async function cadastrarUsuario(event) {
         alert("Usuário cadastrado com sucesso");
         window.location.href = "feed.html";
     }
+
     catch (erro) {
         console.log(erro);
     }
+}
+
+async function deslogConta() {
+        
+    localStorage.removeItem("usuarioId");
+    localStorage.removeItem("usuarioNome");
+
+    window.location.href = "cadastro.html"
 }
 
 async function loginUsuario(event) {
@@ -251,7 +260,7 @@ async function carregarVideos() {
 
     listaVideos.innerHTML = "";
 
-    videos.forEach(function(video) {
+    videos.forEach(function (video) {
         const card = document.createElement("div");
         card.classList.add("video");
 

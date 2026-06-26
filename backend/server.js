@@ -26,13 +26,11 @@ db.connect((erro) => {
     }
     console.log("Conectado com sucesso");
     const criarTabelaSQL = ` 
-CREATE TABLE IF NOT EXISTS alunos1 (
+CREATE TABLE IF NOT EXISTS usuarios (
   id int auto_increment primary key,
   nome varchar(70) not null,
-  idade int not null,
-  telefone varchar(20) not null,
-  nivel varchar(50) not null,
-  horario varchar(50) not null,
+  email varchar (100) unique not null,
+  senha varchar (30) not null,
   ativo boolean default true
 );
     `;
