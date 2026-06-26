@@ -26,7 +26,7 @@ db.connect((erro) => {
     }
     console.log("Conectado com sucesso");
     const criarTabelaSQL = ` 
-    CREATE TABLE IF NOT EXISTS usuarios ( 
+    CREATE TABLE IF NOT EXISTS usuarios1 ( 
     id int auto_increment primary key,
     nome varchar(70) not null,
     email varchar(100) unique not null,
@@ -69,7 +69,7 @@ app.post("/usuarios", (req, res) => {
         })
     }
 
-    const verificaSQL = "SELECT * FROM usuarios WHERE email = ?";
+    const verificaSQL = "SELECT * FROM usuarios1 WHERE email = ?";
     db.query(verificaSQL, [email],
         (erro, resultado) => {
             if (erro) {
@@ -80,7 +80,7 @@ app.post("/usuarios", (req, res) => {
                     erro: "Já existe esse email cadastrado! "
                 })
             }
-            const inserirSQL = `INSERT INTO usuarios (nome, email, senha)
+            const inserirSQL = `INSERT INTO usuarios1 (nome, email, senha)
             VALUES (?,?,?)`
             db.query(
                 inserirSQL,
@@ -102,7 +102,7 @@ app.post("/usuarios", (req, res) => {
 
 app.get("/usuarios", (req, res) => {
     db.query(
-        "SELECT * FROM usuarios", (erro, resultado) => {
+        "SELECT * FROM usuarios1", (erro, resultado) => {
             if (erro) {
                 return res.status(500).json(erro);
             }
@@ -113,7 +113,7 @@ app.get("/usuarios", (req, res) => {
 
 app.delete("/usuarios/:id", (req, res) => {
     const id = req.params.id;
-    db.query("DELETE FROM usuarios WHERE id = ?",
+    db.query("DELETE FROM usuarios1 WHERE id = ?",
         [id], (erro, resultado) => {
             if (erro) {
                 return res.status(500).json(erro);
@@ -131,7 +131,7 @@ app.delete("/usuarios/:id", (req, res) => {
 
 app.put("/usuarios/:id", (req, res) => {
     const id = req.params.id;
-    db.query("SELECT ativo FROM usuarios WHERE id = ?", [id], (erro, resultado) => {
+    db.query("SELECT ativo FROM usuarios1 WHERE id = ?", [id], (erro, resultado) => {
         if (erro) {
             return res.status(500).json(erro);
         }
@@ -143,7 +143,7 @@ app.put("/usuarios/:id", (req, res) => {
         const novoStatus =
             resultado[0].ativo ? 0 : 1;
 
-        db.query("UPDATE usuarios SET ativo = ? WHERE id = ?", [novoStatus, id], (erro) => {
+        db.query("UPDATE usuarios1 SET ativo = ? WHERE id = ?", [novoStatus, id], (erro) => {
             if (erro) {
                 return res.status(500).json(erro);
             }
@@ -200,7 +200,7 @@ app.get("/usuarios/:id", (req, res) => {
     const { id } = req.params;
 
     db.query(
-        "SELECT nome FROM usuarios WHERE id = ?",
+        "SELECT nome FROM usuarios1 WHERE id = ?",
         [id],
         (erro, resultado) => {
             if (erro) {
@@ -228,7 +228,7 @@ app.post("/login", (req, res) => {
     }
 
     db.query(
-        "SELECT * FROM usuarios WHERE email = ?",
+        "SELECT * FROM usuarios1 WHERE email = ?",
         [email],
         (erro, resultado) => {
             if (erro) {
