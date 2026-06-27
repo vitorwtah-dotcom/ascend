@@ -1,4 +1,4 @@
-const API = "http://localhost:3000"
+const API = "https://ascend-backend-r53o.onrender.com"
 
 async function cadastrarUsuario(event) {
 
@@ -229,7 +229,7 @@ if (formPost) {
 
         dados.append("usuario_id", usuarioId);
 
-        const resposta = await fetch("http://localhost:3000/upload-video", {
+        const resposta = await fetch(`${API}/upload-video`, {
             method: "POST",
             body: dados
         });
@@ -247,7 +247,7 @@ const listaVideos = document.getElementById("videos");
 async function carregarVideos() {
     if (!listaVideos) return;
 
-    const resposta = await fetch("http://localhost:3000/videos");
+    const resposta = await fetch(`${API}/videos`);
     const videos = await resposta.json();
 
     listaVideos.innerHTML = "";
@@ -280,7 +280,7 @@ async function carregarVideos() {
             }
             </style>
             <a href="assistir.html?id=${video.id}">
-                <img src="http://localhost:3000/${video.thumbnail}" width="300" height= "200">
+                <img src="${API}/${video.thumbnail}" width="300" height= "200">
             </a>
 
             <div id="divisao">
@@ -307,14 +307,14 @@ async function carregarVideo() {
 
     if (!id) return;
 
-    const resposta = await fetch(`http://localhost:3000/videos/${id}`);
+    const resposta = await fetch(`${API}/videos/${id}`);
     const video = await resposta.json();
 
     tituloVideo.innerText = video.titulo;
     descricaoVideo.innerText = video.descricao;
     usuarioVideo.innerText = "Enviado por: " + video.usuario;
 
-    player.src = `http://localhost:3000/${video.video}`;
+    player.src = `${API}/${video.video}`;
     player.load();
 }
 if (document.getElementById("player")) {
