@@ -271,6 +271,13 @@ async function carregarVideos() {
             align-items: center;
             }
 
+            .fotoPerfilFeed{
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            object-fit:cover;
+            }
+
             .video:hover{
                 cursor: pointer;
             }
@@ -297,7 +304,7 @@ async function carregarVideos() {
 
             <div id="informations">
             <div>
-            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" width="40" height="40">
+            <img src="${video.foto_perfil || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" width="40" height="40"  class="fotoPerfilFeed">
             </div>
             <div id="divisao">
             <h2>${video.titulo}</h2>
@@ -407,13 +414,13 @@ if (formPerfil) {
     });
 };
 
-function abrirModal(){
+function abrirModal() {
 
     document.getElementById("modalPerfil").style.display = "flex";
 
 }
 
-function fecharModal(){
+function fecharModal() {
 
     document.getElementById("modalPerfil").style.display = "none";
 

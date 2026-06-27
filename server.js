@@ -364,13 +364,16 @@ app.post("/upload-video", upload.fields([
 
 app.get("/videos", function (req, res) {
     const sql = `
-    SELECT videos.*,
-    usuarios.nome AS usuario
+    SELECT 
+        videos.*,
+        usuarios.nome AS usuario,
+        usuarios.foto_perfil,
+        usuarios.banner
     FROM videos
     INNER JOIN usuarios
     ON videos.usuario_id = usuarios.id
     ORDER BY videos.data_postagem DESC
-`;;
+    `;
 
     db.query(sql, function (erro, resultados) {
         if (erro) {
