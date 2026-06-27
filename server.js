@@ -1,20 +1,23 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
 const multer = require("multer");
-const path = require("path");
+const cloudinary = require("cloudinary").v2;
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "Ascend"
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+const db = mysql.createConnection(process.env.DATABASE_URL);
 
 db.connect((erro) => {
     if (erro) {
@@ -23,7 +26,43 @@ db.connect((erro) => {
         return;
     }
     console.log("Conectado com sucesso");
-})
+
+        db.query(`
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nome VARCHAR(100) NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            senha VARCHAR(255) NOT NULL,
+            ativo BOOLEAN DEFAULT TRUE,
+            foto_perfil TEXT
+        );
+    `);
+
+    db.query(`
+        CREATE TABLE IF NOT EXISTS adm (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            senha VARCHAR(255) NOT NULL
+        );
+    `);
+
+    db.query(`
+        INSERT IGNORE INTO adm (id, senha)
+        VALUES (1, '1234');
+    `);
+
+    db.query(`
+        CREATE TABLE IF NOT EXISTS videos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            titulo VARCHAR(255),
+            descricao TEXT,
+            video TEXT,
+            thumbnail TEXT,
+            usuario_id INT,
+            data_postagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        );
+    `);
+});
 
 let i = 1
 
@@ -248,52 +287,61 @@ app.post("/login", (req, res) => {
     );
 });
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        if (file.fieldname === "video") {
-            cb(null, "uploads/videos/");
-        } else if (file.fieldname === "thumbnail") {
-            cb(null, "uploads/thumbs/");
-        }
-    },
-
-    filename: function (req, file, cb) {
-        const nomeArquivo = Date.now() + path.extname(file.originalname);
-        cb(null, nomeArquivo);
-    }
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({ dest: "temp/" });
 
 app.post("/upload-video", upload.fields([
     { name: "video", maxCount: 1 },
     { name: "thumbnail", maxCount: 1 }
-]), function (req, res) {
+]), async function (req, res) {
 
-    const titulo = req.body.titulo;
-    const descricao = req.body.descricao;
-    const usuario_id = req.body.usuario_id;
+    try {
+        const titulo = req.body.titulo;
+        const descricao = req.body.descricao;
+        const usuario_id = req.body.usuario_id;
 
-    const video = "uploads/videos/" + req.files.video[0].filename;
-    const thumbnail = "uploads/thumbs/" + req.files.thumbnail[0].filename;
-
-    const sql = `
-        INSERT INTO videos (titulo, descricao, video, thumbnail, usuario_id)
-        VALUES (?, ?, ?, ?, ?)
-    `;
-
-    db.query(sql, [titulo, descricao, video, thumbnail, usuario_id], function (erro) {
-        if (erro) {
-            console.log(erro);
-            return res.status(500).json({
-                mensagem: "Erro ao salvar vídeo no banco"
+        if (!req.files.video || !req.files.thumbnail) {
+            return res.status(400).json({
+                mensagem: "Envie o vídeo e a thumbnail."
             });
         }
 
-        res.json({
-            mensagem: "Vídeo postado com sucesso!"
+        const uploadVideo = await cloudinary.uploader.upload(req.files.video[0].path, {
+            resource_type: "video",
+            folder: "ascend/videos"
         });
-    });
+
+        const uploadThumbnail = await cloudinary.uploader.upload(req.files.thumbnail[0].path, {
+            resource_type: "image",
+            folder: "ascend/thumbnails"
+        });
+
+        const video = uploadVideo.secure_url;
+        const thumbnail = uploadThumbnail.secure_url;
+
+        const sql = `
+            INSERT INTO videos (titulo, descricao, video, thumbnail, usuario_id)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+
+        db.query(sql, [titulo, descricao, video, thumbnail, usuario_id], function (erro) {
+            if (erro) {
+                console.log(erro);
+                return res.status(500).json({
+                    mensagem: "Erro ao salvar vídeo no banco"
+                });
+            }
+
+            res.json({
+                mensagem: "Vídeo postado com sucesso!"
+            });
+        });
+
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).json({
+            mensagem: "Erro ao enviar vídeo para a nuvem"
+        });
+    }
 });
 
 app.get("/videos", function (req, res) {
@@ -346,7 +394,8 @@ app.get("/videos/:id", function (req, res) {
     });
 });
 
-app.listen(3000, () => {
-    console.log("Servidor rodando em: ")
-    console.log("http://localhost:3000")
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log("Servidor rodando na porta " + PORT);
 });
