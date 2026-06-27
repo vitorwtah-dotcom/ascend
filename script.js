@@ -280,7 +280,7 @@ async function carregarVideos() {
             }
             </style>
             <a href="assistir.html?id=${video.id}">
-                <img src="${API}/${video.thumbnail}" width="300" height= "200">
+                <img src="${video.thumbnail}" width="300" height= "200">
             </a>
 
             <div id="divisao">
@@ -314,7 +314,7 @@ async function carregarVideo() {
     descricaoVideo.innerText = video.descricao;
     usuarioVideo.innerText = "Enviado por: " + video.usuario;
 
-    player.src = `${API}/${video.video}`;
+    player.src = video.video;
     player.load();
 }
 if (document.getElementById("player")) {
