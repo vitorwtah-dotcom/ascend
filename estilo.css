@@ -147,6 +147,12 @@ h3:hover {
     overflow: hidden;
 }
 
+#Apostar:hover {
+    border: solid 1pt whitesmoke;
+    background-color: #3a70d465;
+    transform: scale(1.05);
+}
+
 #videos {
     display: flex;
     flex-wrap: wrap;
