@@ -333,6 +333,29 @@ function deslogConta() {
     window.location.replace("cadastro.html");
 }
 
+function verificarLogin() {
+
+    const paginasProtegidas = [
+        "feed.html",
+        "perfil.html",
+        "postar.html",
+        "assistir.html",
+        "adm.html"
+    ];
+
+    const paginaAtual = window.location.pathname.split("/").pop();
+
+    if (
+        paginasProtegidas.includes(paginaAtual) &&
+        !localStorage.getItem("usuarioId")
+    ) {
+        window.location.replace("cadastro.html");
+    }
+
+}
+
+verificarLogin();
+
 carregarVideos();
 carregarVideo();
 carregarPerfil();
