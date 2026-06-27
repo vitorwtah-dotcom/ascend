@@ -6,20 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assistir.css">
 </head>
 
 <body>
-
+    <header id="cabecalho">
+        <h3 onclick="window.location.href='feed.html'">Home</h3>
+        <div>
+            <button id="buttonGerar" onclick="gerarMensagem()">Motivação</button>
+            <input type="text" id="mensagem" placeholder="Inspire-se...">
+        </div>
+        <i class="fa-solid fa-user" id="icone" onclick="window.location.href='perfil.html'"></i><span id="msperfil"
+            style="display: none;">Perfil</span>
+    </header>
     <div id="conteudo">
-        <p id="pizao" onclick="window.location.href='feed.html'">Home</p>
-        <video id="player" width="10000" controls></video>
+        <div id="videoContainer">
+            <video id="player" controls></video>
 
-        <p id="usuarioVideo"></p>
-        <h1 id="tituloVideo"></h1>
-        <p id="descricaoVideo"></p>
+            <h1 id="tituloVideo"></h1>
+
+            <div id="informacoes">
+                <p id="usuarioVideo"></p>
+            </div>
+
+            <p id="descricaoVideo"></p>
+        </div>
     </div>
 
+
     <script src="script.js"></script>
+    <script src="api.js"></script>
 </body>
 
 </html>

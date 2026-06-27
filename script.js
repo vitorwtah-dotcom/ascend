@@ -260,22 +260,30 @@ async function carregarVideos() {
 
             <style>
 
+            #informations{
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            align-items: center;
+            }
+
             .video:hover{
                 cursor: pointer;
             }
 
             p{
-            color: white;
+            color: gray;
             margin: 0;
             }
             h2{
             color: white;
+            font-size: 18px;
             margin: 0;
             }
             #divisao{
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: -2px;
 
             }
             </style>
@@ -283,10 +291,14 @@ async function carregarVideos() {
                 <img src="${video.thumbnail}" width="300" height= "200">
             </a>
 
+            <div id="informations">
+            <div>
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" width="40" height="40">
+            </div>
             <div id="divisao">
-            <p>${video.usuario}</p>
             <h2>${video.titulo}</h2>
-            <p>${video.descricao}</p>
+            <p>${video.usuario}</p>
+            </div>
             </div>
         `;
 

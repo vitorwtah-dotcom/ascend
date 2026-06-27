@@ -908,9 +908,10 @@ button:hover {
 
 #player {
     display: flex;
+    position: relative;
     width: 1300px;
     z-index: 2;
-    margin-bottom: 30px;
+    border: 1pt rgba(255, 255, 255, 0.329) solid;
 
 }
 
