@@ -390,12 +390,16 @@ app.get("/videos/:id", function (req, res) {
     const id = req.params.id;
 
     const sql = `
-        SELECT videos.*,
-        usuarios.nome AS usuario
-        FROM videos
-        INNER JOIN usuarios
-        ON videos.usuario_id = usuarios.id
-        WHERE videos.id = ?
+    SELECT videos.*,
+    usuarios.id AS usuario_id,
+    usuarios.nome AS usuario,
+    usuarios.foto_perfil,
+    usuarios.banner,
+    usuarios.bio
+    FROM videos
+    INNER JOIN usuarios
+    ON videos.usuario_id = usuarios.id
+    WHERE videos.id = ?
         `;
 
     db.query(sql, [id], function (erro, resultado) {

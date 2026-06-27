@@ -317,13 +317,24 @@ async function carregarVideos() {
     });
 };
 
+
 async function carregarVideo() {
+
     const tituloVideo = document.getElementById("tituloVideo");
     const descricaoVideo = document.getElementById("descricaoVideo");
     const player = document.getElementById("player");
     const usuarioVideo = document.getElementById("usuarioVideo");
+    const fotoAutor = document.getElementById("fotoAutor");
+    const dataVideo = document.getElementById("dataVideo");
 
-    if (!tituloVideo || !descricaoVideo || !player || !usuarioVideo) return;
+    if (
+        !tituloVideo ||
+        !descricaoVideo ||
+        !player ||
+        !usuarioVideo ||
+        !fotoAutor ||
+        !dataVideo
+    ) return;
 
     const parametros = new URLSearchParams(window.location.search);
     const id = parametros.get("id");
@@ -335,14 +346,30 @@ async function carregarVideo() {
 
     tituloVideo.innerText = video.titulo;
     descricaoVideo.innerText = video.descricao;
-    usuarioVideo.innerText = "Enviado por: " + video.usuario;
+    usuarioVideo.innerText = video.usuario;
+
+    fotoAutor.src =
+        video.foto_perfil ||
+        "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+    const data = new Date(video.data_postagem);
+
+    dataVideo.innerText =
+        "Publicado em " +
+        data.toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
 
     player.src = video.video;
     player.load();
+
 }
 if (document.getElementById("player")) {
     carregarVideo();
 }
+
 
 function deslogConta() {
     localStorage.removeItem("usuarioId");
