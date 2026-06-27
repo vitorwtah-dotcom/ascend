@@ -27,7 +27,7 @@ db.connect((erro) => {
     }
     console.log("Conectado com sucesso");
 
-        db.query(`
+    db.query(`
         CREATE TABLE IF NOT EXISTS usuarios (
             id INT AUTO_INCREMENT PRIMARY KEY,
             nome VARCHAR(100) NOT NULL,
@@ -62,6 +62,24 @@ db.connect((erro) => {
             FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
         );
     `);
+
+    db.query(`ALTER TABLE usuarios ADD COLUMN foto_perfil TEXT`, (erro) => {
+        if (erro && erro.code !== "ER_DUP_FIELDNAME") {
+            console.log("Erro foto_perfil:", erro.sqlMessage);
+        }
+    });
+
+    db.query(`ALTER TABLE usuarios ADD COLUMN banner TEXT`, (erro) => {
+        if (erro && erro.code !== "ER_DUP_FIELDNAME") {
+            console.log("Erro banner:", erro.sqlMessage);
+        }
+    });
+
+    db.query(`ALTER TABLE usuarios ADD COLUMN bio TEXT`, (erro) => {
+        if (erro && erro.code !== "ER_DUP_FIELDNAME") {
+            console.log("Erro bio:", erro.sqlMessage);
+        }
+    });
 });
 
 let i = 1
