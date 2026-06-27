@@ -64,27 +64,6 @@ db.connect((erro) => {
     `);
 });
 
-app.get("/atualizar-banco", (req, res) => {
-
-    db.query(`
-        ALTER TABLE usuarios
-        ADD COLUMN foto_perfil TEXT;
-    `);
-
-    db.query(`
-        ALTER TABLE usuarios
-        ADD COLUMN banner TEXT;
-    `);
-
-    db.query(`
-        ALTER TABLE usuarios
-        ADD COLUMN bio TEXT;
-    `);
-
-    res.send("Banco atualizado!");
-
-});
-
 let i = 1
 
 app.get("/", (req, res) => {
@@ -246,7 +225,7 @@ app.get("/usuarios/:id", (req, res) => {
     const { id } = req.params;
 
     db.query(
-        "SELECT nome FROM usuarios WHERE id = ?",
+        "SELECT nome, email, foto_perfil, banner, bio FROM usuarios WHERE id = ?",
         [id],
         (erro, resultado) => {
             if (erro) {
@@ -413,6 +392,59 @@ app.get("/videos/:id", function (req, res) {
 
         res.json(resultado[0]);
     });
+});
+
+app.put("/perfil/:id", upload.fields([
+    { name: "foto_perfil", maxCount: 1 },
+    { name: "banner", maxCount: 1 }
+]), async function (req, res) {
+    try {
+        const { id } = req.params;
+        const { bio } = req.body;
+
+        let fotoPerfilUrl = null;
+        let bannerUrl = null;
+
+        if (req.files && req.files.foto_perfil) {
+            const uploadFoto = await cloudinary.uploader.upload(req.files.foto_perfil[0].path, {
+                resource_type: "image",
+                folder: "ascend/perfis"
+            });
+
+            fotoPerfilUrl = uploadFoto.secure_url;
+        }
+
+        if (req.files && req.files.banner) {
+            const uploadBanner = await cloudinary.uploader.upload(req.files.banner[0].path, {
+                resource_type: "image",
+                folder: "ascend/banners"
+            });
+
+            bannerUrl = uploadBanner.secure_url;
+        }
+
+        const sql = `
+            UPDATE usuarios
+            SET
+                bio = COALESCE(?, bio),
+                foto_perfil = COALESCE(?, foto_perfil),
+                banner = COALESCE(?, banner)
+            WHERE id = ?
+        `;
+
+        db.query(sql, [bio || null, fotoPerfilUrl, bannerUrl, id], function (erro) {
+            if (erro) {
+                console.log(erro);
+                return res.status(500).json({ mensagem: "Erro ao atualizar perfil" });
+            }
+
+            res.json({ mensagem: "Perfil atualizado com sucesso!" });
+        });
+
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).json({ mensagem: "Erro ao enviar imagens para o Cloudinary" });
+    }
 });
 
 const PORT = process.env.PORT || 3000;

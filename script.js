@@ -203,10 +203,6 @@ if (inputVideo && videoPreview) {
 }
 
 async function carregarPerfil() {
-    const elemento = document.getElementById("nomeUsuario");
-
-    if (!elemento) return;
-
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!usuarioId) return;
@@ -214,7 +210,15 @@ async function carregarPerfil() {
     const resposta = await fetch(`${API}/usuarios/${usuarioId}`);
     const usuario = await resposta.json();
 
-    elemento.innerHTML = usuario.nome;
+    const nomeUsuario = document.getElementById("nomeUsuario");
+    const fotoPerfil = document.getElementById("fotoPerfil");
+    const bannerPerfil = document.getElementById("bannerPerfil");
+    const bioPerfil = document.getElementById("bioPerfil");
+
+    if (nomeUsuario) nomeUsuario.innerHTML = usuario.nome;
+    if (fotoPerfil && usuario.foto_perfil) fotoPerfil.src = usuario.foto_perfil;
+    if (bannerPerfil && usuario.banner) bannerPerfil.src = usuario.banner;
+    if (bioPerfil) bioPerfil.innerHTML = usuario.bio || "Sem bio ainda.";
 }
 
 const formPost = document.getElementById("formPost");
@@ -363,6 +367,57 @@ function verificarLogin() {
 window.addEventListener("pageshow", function () {
     verificarLogin();
 });
+
+const formPerfil = document.getElementById("formPerfil");
+
+if (formPerfil) {
+    formPerfil.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        try {
+            const usuarioId = localStorage.getItem("usuarioId");
+
+            if (!usuarioId) {
+                alert("Usuário não está logado.");
+                return;
+            }
+
+            const dados = new FormData(formPerfil);
+
+            const resposta = await fetch(`${API}/perfil/${usuarioId}`, {
+                method: "PUT",
+                body: dados
+            });
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok) {
+                alert(resultado.mensagem || "Erro ao atualizar perfil.");
+                return;
+            }
+
+            alert(resultado.mensagem);
+            fecharModal();
+            carregarPerfil();
+
+        } catch (erro) {
+            console.log("Erro ao salvar perfil:", erro);
+            alert("Erro ao conectar com o servidor.");
+        }
+    });
+};
+
+function abrirModal(){
+
+    document.getElementById("modalPerfil").style.display = "flex";
+
+}
+
+function fecharModal(){
+
+    document.getElementById("modalPerfil").style.display = "none";
+
+}
 
 carregarVideos();
 carregarVideo();
