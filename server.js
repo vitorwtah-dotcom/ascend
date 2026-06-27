@@ -64,6 +64,27 @@ db.connect((erro) => {
     `);
 });
 
+app.get("/atualizar-banco", (req, res) => {
+
+    db.query(`
+        ALTER TABLE usuarios
+        ADD COLUMN foto_perfil TEXT;
+    `);
+
+    db.query(`
+        ALTER TABLE usuarios
+        ADD COLUMN banner TEXT;
+    `);
+
+    db.query(`
+        ALTER TABLE usuarios
+        ADD COLUMN bio TEXT;
+    `);
+
+    res.send("Banco atualizado!");
+
+});
+
 let i = 1
 
 app.get("/", (req, res) => {
