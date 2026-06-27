@@ -1,70 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Gamer RPG</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="pagina">
         <button id="voltar" type="button" onclick="window.location.href='feed.html'">Voltar ao início</button>
-        
+
         <section id="topo">
             <div id="banner" style="cursor: pointer;" title="Clique para mudar o banner">
-                <img id="user-banner" src="4745416.jpg" alt="Banner do Usuário" style="width: 100%; height: 100%; object-fit: cover;">
+                <img id="user-banner" src="4745416.jpg" alt="Banner do Usuário"
+                    style="width: 100%; height: 100%; object-fit: cover;">
                 <input type="file" id="input-banner" accept="image/*" style="display: none;">
             </div>
 
             <div id="perfil">
-                <div id="foto-perfil"  style="cursor: pointer;" title="Clique para mudar a foto">
-                    <img id="user-avatar" src="fotopadrao.jpg" alt="Foto de Perfil" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                <div id="foto-perfil" style="cursor: pointer;" title="Clique para mudar a foto">
+                    <img id="user-avatar" src="fotopadrao.jpg" alt="Foto de Perfil"
+                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                     <input type="file" id="input-avatar" accept="image/*" style="display: none;">
                 </div>
 
                 <div id="info-principal">
-                    <h1 id="nomeUsuario">Usuario1</h1>
-                
-                    <button id="botaoEditar">Editar perfil</button>
-                    <p id="bio" contenteditable="true" title="Clique para editar a bio">Guerreiro de Midgard, caçador de desafios e criador de conteúdo com estilo God of War. Vídeos de gameplay, dicas e aventura.</p>
+                    <h1 id="nomeUsuario"></h1>
+                    <div class="botoesPerfil">
+                        <button class="btn-sair" id="botaoEditar">Editar perfil</button>
+                        <button class="btn-sair" onclick="deslogConta()">Sair</button>
+                    </div>
+                    <p id="bio"></p>
+
+
                 </div>
             </div>
 
             <div id="info-rapida">
-                <div class="card-info"><strong>Nível 28</strong><span>Progresso</span></div>
-                <div class="card-info"><strong>XP 14.560</strong><span>Pontos</span></div>
-                <div class="card-info"><strong>#12</strong><span>Ranking</span></div>
                 <div class="card-info"><strong>48k</strong><span>Seguidores</span></div>
                 <div class="card-info"><strong>72</strong><span>Vídeos</span></div>
             </div>
 
-            <div id="barra-xp">
-                <p>XP atual</p>
-                <div id="progresso">
-                    <div id="preenchimento"></div>
-                </div>
-            </div>
+
         </section>
 
-        <section id="conquistas">
-            <h2>Conquistas</h2>
-            <div id="lista-conquistas">
-                <div class="conquista">
-                    <h3>Vingador de Deuses</h3>
-                    <p>Completar 100 horas de gameplay com estilo guerreiro.</p>
-                </div>
-                <div class="conquista">
-                    <h3>Herói de Midgard</h3>
-                    <p>Conquistar novos seguidores e subir no ranking.</p>
-                </div>
-                <div class="conquista">
-                    <h3>Destruidor de Boss</h3>
-                    <p>Derrotar chefes em vídeos com alta visualização.</p>
-                </div>
-            </div>
-        </section>
-        <button onclick="deslogConta()">Sair</button>      
-   <script src="script.js"></script>
-   <script src="perfil.js"></script>
+        <script src="script.js"></script>
+        <script src="perfil.js"></script>
 </body>
+
 </html>

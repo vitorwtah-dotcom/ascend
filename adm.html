@@ -13,10 +13,10 @@
         <div id="login" class="card">
             <h1 id="h1Adm">Acesso Restrito</h1>
             <p>Digite sua senha de admin</p>
-            <form onsubmit="conferirAdm(event)">
+            <form onsubmit="conferirAdm(event)" id="formAdm">
                 <input type="password" id="senha" placeholder="Digite sua senha..." required>
                 <button type="submit" id="acessar">Acessar</button>
-                <span id="mensagem" onclick="window.location.href='feed.html'" style="color: rgba(0, 89, 255, 0.719); cursor: pointer;">Voltar</span>
+                <span id="mensagem" onclick="window.location.href='feed.html'"cursor: pointer;">Voltar</span>
             </form>
         </div>
         <div id="conteudo" style="display: none;">
@@ -30,7 +30,7 @@
             </div>
             <br>
             <br>
-            <button id="botaosair" onclick="logoutAdm()">Sair</button>
+            <button id="botaosair" class="btn-sair" onclick="logoutAdm()">Sair</button>
         </div>
 
     </div>
