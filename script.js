@@ -328,6 +328,7 @@ async function deslogConta() {
 
     alert("Deslogado com sucesso!")
 
+    window.location.replace = "feed.html"
     window.location.href = "cadastro.html"
 }
 
