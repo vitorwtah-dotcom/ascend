@@ -14,14 +14,15 @@
         </div>
 
         <form id="formPost" class="formulario">
-            <input type="text" id="titulo" name="titulo" placeholder="Título">
-            <input type="text" id="categoria" name="categoria" placeholder="Categoria">
-            <textarea id="descricao" name="descricao" placeholder="Descrição"></textarea>
+            <input type="text" id="titulo" name="titulo" placeholder="Título" required>
+            <input type="text" id="categoria" name="categoria" placeholder="Categoria" required>
+            <textarea id="descricao" name="descricao" placeholder="Descrição" maxlength="500" required></textarea>
             <label> Escolha o vídeo </label>
-            <input type="file" id="video" name="video" accept="video/*">
+            <input type="file" id="video" name="video" accept="video/*" required>
             <label> Escolha a thumbnail </label>
             <input type="file" id="thumbnail"  name="thumbnail" accept="image/*">
-            <button type="submit"> Publicar </button>
+            <button type="submit" class="btn-sair"> Publicar </button>
+            <button id="voltar" type="button" onclick="window.location.href='feed.html'">Voltar ao início</button>
         </form>
     </main>
     <script src="script.js"></script>

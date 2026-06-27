@@ -12,18 +12,15 @@
     <div id="pagina">
         <button id="voltar" type="button" onclick="window.location.href='feed.html'">Voltar ao início</button>
         <section id="topo">
-            <div id="banner" style="cursor: pointer;" title="Clique para mudar o banner">
+            <div id="banner" style="cursor: pointer;">
                 <img id="bannerPerfil" alt="Banner do Usuário" style="width: 100%; height: 100%; object-fit: cover;">
-                <input type="file" id="input-banner" accept="image/*" style="display: none;">
             </div>
             <div id="perfil">
-                <div id="foto-perfil" style="cursor: pointer;" title="Clique para mudar a foto">
-                    <img id="fotoPerfil" alt="Foto de Perfil"
-                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                    <input type="file" id="input-avatar" accept="image/*" style="display: none;">
-                </div>
-                <div id="info-principal">
-                    <h1 id="nomeUsuario"></h1>
+                <div id="foto-perfil" style="cursor: pointer;">
+                    <img id="fotoPerfil" alt="Foto de Perfil" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            </div>
+            <div id="info-principal">
+                <h1 id="nomeUsuario"></h1>
                     <div class="botoesPerfil">
                         <button class="btn-sair" id="botaoEditar" onclick="abrirModal()">Editar perfil</button>
                         <button class="btn-sair" onclick="deslogConta()">Sair</button>
@@ -39,13 +36,20 @@
         <div id="modalPerfil">
 
             <form id="formPerfil" enctype="multipart/form-data">
-                <input type="file" name="foto_perfil" accept="image/*">
-                <input type="file" name="banner" accept="image/*">
+                <div id="modalHeader">
+                    <p>Atualize sua foto de perfil:</p>
+                    <input type="file" name="foto_perfil" accept="image/*">
+                    <p>Atualize seu banner:</p>
+                    <input type="file" name="banner" accept="image/*">
+                    <p>Escreva sua bio:</p>
+                    <textarea name="bio" placeholder="Fale sobre você..."></textarea>
+                    <div>
+                        <button class="btn-sair" type="submit">Salvar</button>
+                        <button class="btn-sair" type="button" onclick="fecharModal()">Cancelar</button>
+                    </div>
+                </div>
 
-                <textarea name="bio" placeholder="Escreva sua bio"></textarea>
 
-                <button type="submit">Salvar</button>
-                <button type="button" onclick="fecharModal()">Cancelar</button>
             </form>
 
         </div>

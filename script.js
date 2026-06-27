@@ -202,6 +202,9 @@ if (inputVideo && videoPreview) {
     });
 }
 
+const FOTO_PADRAO = "https://res.cloudinary.com/dyglfqcks/image/upload/v1782598822/fotoPadrao_g2aakv.png";
+const BANNER_PADRAO = "https://res.cloudinary.com/dyglfqcks/image/upload/v1782598823/bannerPadrao_dgzvir.png";
+
 async function carregarPerfil() {
     const usuarioId = localStorage.getItem("usuarioId");
 
@@ -215,10 +218,15 @@ async function carregarPerfil() {
     const bannerPerfil = document.getElementById("bannerPerfil");
     const bioPerfil = document.getElementById("bioPerfil");
 
-    if (nomeUsuario) nomeUsuario.innerHTML = usuario.nome;
-    if (fotoPerfil && usuario.foto_perfil) fotoPerfil.src = usuario.foto_perfil;
-    if (bannerPerfil && usuario.banner) bannerPerfil.src = usuario.banner;
-    if (bioPerfil) bioPerfil.innerHTML = usuario.bio || "Sem bio ainda.";
+    if (nomeUsuario)
+        nomeUsuario.innerHTML = usuario.nome;
+    if (fotoPerfil)
+        fotoPerfil.src = usuario.foto_perfil || FOTO_PADRAO;
+    if (bannerPerfil)
+        bannerPerfil.src = usuario.banner || BANNER_PADRAO;
+    if (bioPerfil)
+        bioPerfil.innerHTML = usuario.bio || "Sem bio ainda.";
+
 }
 
 const formPost = document.getElementById("formPost");
@@ -304,7 +312,7 @@ async function carregarVideos() {
 
             <div id="informations">
             <div>
-            <img src="${video.foto_perfil || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" width="40" height="40"  class="fotoPerfilFeed">
+            <img src="${video.foto_perfil || FOTO_PADRAO}" width="40" height="40"  class="fotoPerfilFeed">
             </div>
             <div id="divisao">
             <h2>${video.titulo}</h2>
@@ -349,8 +357,7 @@ async function carregarVideo() {
     usuarioVideo.innerText = video.usuario;
 
     fotoAutor.src =
-        video.foto_perfil ||
-        "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        video.foto_perfil || FOTO_PADRAO;
 
     const data = new Date(video.data_postagem);
 
