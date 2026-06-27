@@ -322,25 +322,20 @@ if (document.getElementById("player")) {
 }
 
 function deslogConta() {
-
     localStorage.removeItem("usuarioId");
     localStorage.removeItem("usuarioNome");
-
     sessionStorage.clear();
-
-    alert("Deslogado com sucesso!");
 
     window.location.replace("cadastro.html");
 }
 
 function verificarLogin() {
-
     const paginasProtegidas = [
         "feed.html",
         "perfil.html",
+        "adm.html",
         "postar.html",
-        "assistir.html",
-        "adm.html"
+        "assistir.html"
     ];
 
     const paginaAtual = window.location.pathname.split("/").pop();
@@ -351,10 +346,11 @@ function verificarLogin() {
     ) {
         window.location.replace("cadastro.html");
     }
-
 }
 
-verificarLogin();
+window.addEventListener("pageshow", function () {
+    verificarLogin();
+});
 
 carregarVideos();
 carregarVideo();
