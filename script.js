@@ -321,17 +321,17 @@ if (document.getElementById("player")) {
     carregarVideo();
 }
 
-async function deslogConta() {
+function deslogConta() {
 
     localStorage.removeItem("usuarioId");
     localStorage.removeItem("usuarioNome");
 
-    alert("Deslogado com sucesso!")
+    sessionStorage.clear();
 
-    window.location.replace = "feed.html"
-    window.location.href = "cadastro.html"
+    alert("Deslogado com sucesso!");
+
+    window.location.replace("cadastro.html");
 }
-
 
 carregarVideos();
 carregarVideo();
