@@ -339,6 +339,10 @@ async function carregarVideo() {
 
     if (!id) return;
 
+    await fetch(`${API}/videos/${id}/view`, {
+        method: "POST"
+    });
+
     const resposta = await fetch(`${API}/videos/${id}`);
     const video = await resposta.json();
 
@@ -555,7 +559,18 @@ async function darLike() {
 
     const dados = await resposta.json();
 
-    carregarVideo();
+    atualizarLikes(videoId);
+}
+
+async function atualizarLikes(videoId) {
+    const resposta = await fetch(`${API}/videos/${videoId}`);
+    const video = await resposta.json();
+
+    const totalLikes = document.getElementById("totalLikes");
+
+    if (totalLikes) {
+        totalLikes.innerText = `${video.total_likes || 0} likes`;
+    }
 }
 
 carregarVideos();

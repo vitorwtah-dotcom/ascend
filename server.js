@@ -405,12 +405,7 @@ app.get("/videos", function (req, res) {
 
 app.get("/videos/:id", function (req, res) {
     const id = req.params.id;
-
-    db.query(
-        "UPDATE videos SET visualizacoes = visualizacoes + 1 WHERE id = ?",
-        [id]
-    );
-
+    
     const sql = `
     SELECT videos.*,
     usuarios.id AS usuario_id,
@@ -568,6 +563,28 @@ app.post("/videos/:id/like", (req, res) => {
             );
         }
     });
+});
+
+app.post("/videos/:id/view", (req, res) => {
+
+    const id = req.params.id;
+
+    db.query(
+        "UPDATE videos SET visualizacoes = visualizacoes + 1 WHERE id = ?",
+        [id],
+        function (erro) {
+
+            if (erro) {
+                return res.status(500).json(erro);
+            }
+
+            res.json({
+                mensagem: "Visualização registrada"
+            });
+
+        }
+    );
+
 });
 
 const PORT = process.env.PORT || 3000;
