@@ -405,24 +405,30 @@ app.get("/videos", function (req, res) {
 
 app.get("/videos/:id", function (req, res) {
     const id = req.params.id;
-    
+
     const sql = `
-    SELECT videos.*,
-    usuarios.id AS usuario_id,
-    usuarios.nome AS usuario,
-    usuarios.foto_perfil,
-    usuarios.banner,
-    usuarios.bio
-    FROM videos
-    INNER JOIN usuarios
-    ON videos.usuario_id = usuarios.id
-    WHERE videos.id = ?
-        `;
+        SELECT 
+            videos.*,
+            usuarios.id AS usuario_id,
+            usuarios.nome AS usuario,
+            usuarios.foto_perfil,
+            usuarios.banner,
+            usuarios.bio,
+            COUNT(likes.id) AS total_likes
+        FROM videos
+        INNER JOIN usuarios
+        ON videos.usuario_id = usuarios.id
+        LEFT JOIN likes
+        ON likes.video_id = videos.id
+        WHERE videos.id = ?
+        GROUP BY videos.id
+    `;
 
     db.query(sql, [id], function (erro, resultado) {
         if (erro) {
             return res.status(500).json({
-                mensagem: "Erro ao buscar vídeo"
+                mensagem: "Erro ao buscar vídeo",
+                erro: erro.sqlMessage
             });
         }
 
@@ -549,7 +555,11 @@ app.post("/videos/:id/like", (req, res) => {
             db.query(
                 "DELETE FROM likes WHERE usuario_id = ? AND video_id = ?",
                 [usuario_id, video_id],
-                () => {
+                (erro) => {
+                    if (erro) {
+                        return res.status(500).json({ erro: erro.sqlMessage });
+                    }
+
                     res.json({ curtido: false });
                 }
             );
@@ -557,7 +567,11 @@ app.post("/videos/:id/like", (req, res) => {
             db.query(
                 "INSERT INTO likes (usuario_id, video_id) VALUES (?, ?)",
                 [usuario_id, video_id],
-                () => {
+                (erro) => {
+                    if (erro) {
+                        return res.status(500).json({ erro: erro.sqlMessage });
+                    }
+
                     res.json({ curtido: true });
                 }
             );
