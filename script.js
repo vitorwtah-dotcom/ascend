@@ -242,6 +242,15 @@ async function carregarPerfil() {
         }
     }
 
+    const botaoSair = document.getElementById("botaoSair");
+
+    if (botaoSair) {
+        if (idPerfil && idPerfil !== localStorage.getItem("usuarioId")) {
+            botaoSair.style.display = "none";
+        }
+    }
+    
+
 }
 
 const formPost = document.getElementById("formPost");
