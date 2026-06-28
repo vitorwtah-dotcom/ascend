@@ -497,7 +497,7 @@ async function pesquisarModal() {
         dados.videos.forEach(video => {
             modal.innerHTML += `
                 <div class="resultadoItem" onclick="abrirVideoPesquisa(${video.id})">
-                    <img src="${video.thumbnail}">
+                    <img src="${video.thumbnail}" width="100" height="60">
                     <div>
                         <strong>${video.titulo}</strong>
                         <p>${video.nome}</p>
