@@ -539,7 +539,6 @@ function abrirVideoPesquisa(id) {
 async function darLike() {
     const parametros = new URLSearchParams(window.location.search);
     const videoId = parametros.get("id");
-
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!usuarioId) {
@@ -559,12 +558,16 @@ async function darLike() {
 
     const dados = await resposta.json();
 
-    atualizarLikes(videoId);
+    console.log("Resposta do like:", dados);
+
+    await atualizarLikes(videoId);
 }
 
 async function atualizarLikes(videoId) {
     const resposta = await fetch(`${API}/videos/${videoId}`);
     const video = await resposta.json();
+
+    console.log("Dados atualizados:", video);
 
     const totalLikes = document.getElementById("totalLikes");
 
@@ -574,7 +577,6 @@ async function atualizarLikes(videoId) {
 }
 
 carregarVideos();
-carregarVideo();
 carregarPerfil();
 carragarEstatisticas();
 carregarUsuarios();
