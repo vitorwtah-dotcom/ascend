@@ -154,26 +154,66 @@ h3:hover {
 }
 
 #videos {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: start;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 28px 18px;
+    align-items: start;
     position: relative;
-    width: 100%;
-    z-index: 10;
-    gap: 20px;
+    z-index: 1;
 }
 
 .video {
-    width: 300px;
-    margin: 15px;
-    transition: 0.1s;
+    width: 100%;
+    max-width: 320px;
 }
 
-.video:hover {
-    transform: scale(1.05);
+.videoParente {
+    padding: 4px;
+    border-radius: 12px;
+    transition: 0.2s;
 }
 
+.videoParente:hover {
+    background-color: rgba(58, 112, 212, 0.25);
+    cursor: pointer;
+}
+
+.video-thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+}
+
+#informations {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: flex-start;
+}
+
+.fotoPerfilFeed {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+#divisao h2 {
+    color: white;
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+#divisao p {
+    color: gray;
+    margin: 4px 0 0;
+    font-size: 13px;
+}
 
 
 #icone {

@@ -273,46 +273,7 @@ async function carregarVideos() {
 
         card.innerHTML = `
 
-            <style>
-
-            #informations{
-            display: flex;
-            gap: 10px;
-            margin-top: 5px;
-            align-items: center;
-            }
-
-            .fotoPerfilFeed{
-            width:40px;
-            height:40px;
-            border-radius:50%;
-            object-fit:cover;
-            }
-
-            .video:hover{
-                cursor: pointer;
-            }
-
-            p{
-            color: gray;
-            margin: 0;
-            }
-            h2{
-            color: white;
-            font-size: 18px;
-            margin: 0;
-            }
-            #divisao{
-            display: flex;
-            flex-direction: column;
-            gap: -2px;
-
-            .video-thumbnail{
-                width: 100%;
-                height: 200px;
-                object-fit: cover;
-            }
-            </style>
+            <div class="videoParente">
             <a href="assistir.html?id=${video.id}">
                 <img class="video-thumbnail" src="${video.thumbnail}" width="300" height="200">
             </a>
@@ -324,6 +285,7 @@ async function carregarVideos() {
             <div id="divisao">
             <h2>${video.titulo}</h2>
             <p>${video.usuario}</p>
+            </div>
             </div>
             </div>
         `;
