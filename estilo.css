@@ -123,7 +123,7 @@ h3 {
     cursor: pointer;
     transition: all 0.1s ease;
     position: relative;
-    overflow: hidden;  
+    overflow: hidden;
 }
 
 h3:hover {
@@ -155,17 +155,17 @@ h3:hover {
 
 #videos {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: start;
     position: relative;
     width: 100%;
     z-index: 10;
+    gap: 20px;
 }
 
 .video {
-    background-color: rgba(0, 110, 255, 0.596);
     width: 300px;
-    height: 200px;
     margin: 15px;
     transition: 0.1s;
 }
@@ -174,18 +174,20 @@ h3:hover {
     transform: scale(1.05);
 }
 
+
+
 #icone {
-    border: 1px solid #5a8cff;
-    padding: 10px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    background-color: #00144123;
+    object-fit: cover;
+    border: 2px solid #5a8cff;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
 #icone:hover {
-    border: 0.5px solid #5a8cff;
-    background-color: #3a70d465;
-    transform: scale(1.05);
-    cursor: pointer;
+    transform: scale(1.08);
 }
 
 #divPerfil {
@@ -205,4 +207,3 @@ h3:hover {
     margin: 10px;
     font-size: 15px;
 }
-

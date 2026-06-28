@@ -215,6 +215,7 @@ async function carregarPerfil() {
 
     const nomeUsuario = document.getElementById("nomeUsuario");
     const fotoPerfil = document.getElementById("fotoPerfil");
+    const iconeHeader = document.getElementById("icone");
     const bannerPerfil = document.getElementById("bannerPerfil");
     const bioPerfil = document.getElementById("bioPerfil");
 
@@ -222,6 +223,8 @@ async function carregarPerfil() {
         nomeUsuario.innerHTML = usuario.nome;
     if (fotoPerfil)
         fotoPerfil.src = usuario.foto_perfil || FOTO_PADRAO;
+    if (iconeHeader)
+        iconeHeader.src = usuario.foto_perfil || FOTO_PADRAO;
     if (bannerPerfil)
         bannerPerfil.src = usuario.banner || BANNER_PADRAO;
     if (bioPerfil)
@@ -304,10 +307,14 @@ async function carregarVideos() {
             flex-direction: column;
             gap: -2px;
 
+            .video-thumbnail{
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
             }
             </style>
             <a href="assistir.html?id=${video.id}">
-                <img src="${video.thumbnail}" width="300" height= "200">
+                <img class="video-thumbnail" src="${video.thumbnail}" width="300" height="200">
             </a>
 
             <div id="informations">
