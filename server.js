@@ -97,6 +97,17 @@ db.connect((erro) => {
         FOREIGN KEY (video_id) REFERENCES videos(id)
     );
 `);
+
+    db.query(`
+    CREATE TABLE IF NOT EXISTS inscritos (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        inscrito_id INT NOT NULL,
+        canal_id INT NOT NULL,
+        UNIQUE KEY inscricao_unica (inscrito_id, canal_id),
+        FOREIGN KEY (inscrito_id) REFERENCES usuarios(id),
+        FOREIGN KEY (canal_id) REFERENCES usuarios(id)
+    );
+`);
 });
 
 let i = 1
@@ -405,6 +416,7 @@ app.get("/videos", function (req, res) {
 
 app.get("/videos/:id", function (req, res) {
     const id = req.params.id;
+    const usuarioLogadoId = req.query.usuario;
 
     const sql = `
         SELECT 
@@ -414,17 +426,43 @@ app.get("/videos/:id", function (req, res) {
             usuarios.foto_perfil,
             usuarios.banner,
             usuarios.bio,
-            COUNT(likes.id) AS total_likes
+
+            COUNT(DISTINCT likes.id) AS total_likes,
+
+            EXISTS(
+                SELECT 1
+                FROM likes l
+                WHERE l.video_id = videos.id
+                AND l.usuario_id = ?
+            ) AS usuario_curtiu,
+
+            (
+                SELECT COUNT(*)
+                FROM inscritos i
+                WHERE i.canal_id = usuarios.id
+            ) AS total_inscritos,
+
+            EXISTS(
+                SELECT 1
+                FROM inscritos i2
+                WHERE i2.canal_id = usuarios.id
+                AND i2.inscrito_id = ?
+            ) AS usuario_inscrito
+
         FROM videos
+
         INNER JOIN usuarios
         ON videos.usuario_id = usuarios.id
+
         LEFT JOIN likes
         ON likes.video_id = videos.id
+
         WHERE videos.id = ?
+
         GROUP BY videos.id
     `;
 
-    db.query(sql, [id], function (erro, resultado) {
+    db.query(sql, [usuarioLogadoId, usuarioLogadoId, id], function (erro, resultado) {
         if (erro) {
             return res.status(500).json({
                 mensagem: "Erro ao buscar vídeo",
@@ -599,6 +637,60 @@ app.post("/videos/:id/view", (req, res) => {
         }
     );
 
+});
+
+app.post("/usuarios/:id/inscrever", (req, res) => {
+    const canal_id = req.params.id;
+    const { inscrito_id } = req.body;
+
+    if (!inscrito_id) {
+        return res.status(400).json({
+            mensagem: "Usuário não informado"
+        });
+    }
+
+    if (Number(inscrito_id) === Number(canal_id)) {
+        return res.status(400).json({
+            mensagem: "Você não pode se inscrever em si mesmo"
+        });
+    }
+
+    const sqlVerificar = `
+        SELECT * FROM inscritos
+        WHERE inscrito_id = ? AND canal_id = ?
+    `;
+
+    db.query(sqlVerificar, [inscrito_id, canal_id], (erro, resultado) => {
+        if (erro) {
+            return res.status(500).json({ erro: erro.sqlMessage });
+        }
+
+        if (resultado.length > 0) {
+            db.query(
+                "DELETE FROM inscritos WHERE inscrito_id = ? AND canal_id = ?",
+                [inscrito_id, canal_id],
+                (erro) => {
+                    if (erro) {
+                        return res.status(500).json({ erro: erro.sqlMessage });
+                    }
+
+                    res.json({ inscrito: false });
+                }
+            );
+        } else {
+            db.query(
+                "INSERT INTO inscritos (inscrito_id, canal_id) VALUES (?, ?)",
+                [inscrito_id, canal_id],
+                (erro) => {
+                    if (erro) {
+                        return res.status(500).json({ erro: erro.sqlMessage });
+                    }
+
+                    res.json({ inscrito: true });
+                }
+            );
+        }
+    });
 });
 
 const PORT = process.env.PORT || 3000;

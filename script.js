@@ -343,8 +343,37 @@ async function carregarVideo() {
         method: "POST"
     });
 
-    const resposta = await fetch(`${API}/videos/${id}`);
+    const usuarioLogadoId = localStorage.getItem("usuarioId");
+
+    const resposta = await fetch(`${API}/videos/${id}?usuario=${usuarioLogadoId}`);
     const video = await resposta.json();
+
+    const botaoInscrever = document.getElementById("botaoSeguir");
+    const totalInscritos = document.getElementById("inscritos");
+
+    if (totalInscritos) {
+        totalInscritos.innerText = `${video.total_inscritos || 0} inscritos`;
+    }
+
+    if (botaoInscrever) {
+        if (Number(video.usuario_id) === Number(usuarioLogadoId)) {
+            botaoInscrever.style.display = "none";
+        } else {
+            botaoInscrever.style.display = "inline-block";
+        }
+
+        if (video.usuario_inscrito) {
+            botaoInscrever.innerText = "Inscrito";
+            botaoInscrever.classList.add("inscrito");
+        } else {
+            botaoInscrever.innerText = "Inscrever-se";
+            botaoInscrever.classList.remove("inscrito");
+        }
+
+        botaoInscrever.onclick = function () {
+            inscreverUsuario(video.usuario_id);
+        };
+    }
 
     tituloVideo.innerText = video.titulo;
     descricaoVideo.innerText = video.descricao;
@@ -363,6 +392,12 @@ async function carregarVideo() {
 
     fotoAutor.src =
         video.foto_perfil || FOTO_PADRAO;
+
+    fotoAutor.style.cursor = "pointer";
+
+    fotoAutor.onclick = function () {
+        window.location.href = `perfil.html?id=${video.usuario_id}`;
+    };
 
     const data = new Date(video.data_postagem);
 
@@ -537,9 +572,12 @@ function abrirVideoPesquisa(id) {
 }
 
 async function darLike() {
+    const botaoLike = document.getElementById("botaoLike");
     const parametros = new URLSearchParams(window.location.search);
     const videoId = parametros.get("id");
     const usuarioId = localStorage.getItem("usuarioId");
+
+
 
     if (!usuarioId) {
         alert("Você precisa estar logado para curtir.");
@@ -574,6 +612,31 @@ async function atualizarLikes(videoId) {
     if (totalLikes) {
         totalLikes.innerText = `${video.total_likes || 0} likes`;
     }
+}
+
+async function inscreverUsuario(canalId) {
+    const inscritoId = localStorage.getItem("usuarioId");
+
+    if (!inscritoId) {
+        alert("Você precisa estar logado para se inscrever.");
+        return;
+    }
+
+    const resposta = await fetch(`${API}/usuarios/${canalId}/inscrever`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            inscrito_id: inscritoId
+        })
+    });
+
+    const dados = await resposta.json();
+
+    console.log("Inscrição:", dados);
+
+    window.location.reload();
 }
 
 carregarVideos();

@@ -68,7 +68,7 @@ body::before {
     transition: 0.3s;
 }
 
-div{
+div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -110,7 +110,7 @@ h3 {
     cursor: pointer;
     transition: all 0.1s ease;
     position: relative;
-    overflow: hidden;  
+    overflow: hidden;
 }
 
 h3:hover {
@@ -137,13 +137,15 @@ h3:hover {
     display: flex;
     flex-direction: row;
     align-items: center;
+    width: 100%;
     justify-content: flex-start;
     gap: 8px;
-    width: 100%;
+
 }
 
 #tituloVideo {
     margin: 8px 0 0 0;
+    margin-bottom: 4px;
     font-size: 22px;
     color: white;
 }
@@ -159,4 +161,82 @@ h3:hover {
     color: #ddd;
     font-size: 15px;
     text-align: left;
+}
+
+#visualizacoesVideo {
+    margin: 0;
+    font-size: 14px;
+    color: #aaa;
+}
+
+#interacoes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    gap: 8px;
+    width: 100%;
+}
+
+#botaoLike,#botaoSeguir {
+    padding: 8px 12px;
+    background-color: #00144123;
+    border: 1px solid #5a8cff;
+    border-radius: 8px;
+    color: #f5f5f5;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
+}
+
+#botaoLike:hover,#botaoSeguir:hover {
+    background-color: #3a70d42a;
+    transform: scale(1.02);
+}
+
+#detalhes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+#interacoesContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+
+}
+
+#infoUsuario {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+}
+
+#inscritos {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    font-size: 12px;
+    color: #aaa;
+}
+
+span#totalLikes {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    font-size: 14px;
+    color: #aaa;
+    flex-wrap: nowrap;
 }

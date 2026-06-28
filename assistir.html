@@ -24,18 +24,27 @@
             <video id="player" controls></video>
 
             <h1 id="tituloVideo"></h1>
-            <p id="visualizacoesVideo"></p>
-
-            <button onclick="darLike()" id="botaoLike">👍 Curtir</button>
-
-            <span id="totalLikes">0 likes</span>
-
+            <div id="interacoesContainer">
+            <div id="interacoes">
+                <button id="botaoSeguir">Seguir</button>
+                <button onclick="darLike()" id="botaoLike">Curtir</button>
+                <span id="totalLikes">0 likes</span>
+                
+            </div>
             <div id="informacoes">
                 <img id="fotoAutor" width="40" height="40" style="border-radius: 50%; object-fit: cover;"></img>
+                <div id="infoUsuario">
                 <p id="usuarioVideo"></p>
+                <p id="inscritos"></p>
+                </div>
             </div>
-            <p id="dataVideo"></p>
-            <p id="descricaoVideo"></p>
+            </div>
+            <div id="detalhes">
+                <p id="dataVideo"></p><p>-</p>
+                <p id="visualizacoesVideo"></p>
+            </div>
+                <p id="descricaoVideo"></p>
+            
         </div>
     </div>
 
