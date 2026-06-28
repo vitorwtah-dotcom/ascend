@@ -17,10 +17,11 @@
             </div>
             <div id="perfil">
                 <div id="foto-perfil" style="cursor: pointer;">
-                    <img id="fotoPerfil" alt="Foto de Perfil" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-            </div>
-            <div id="info-principal">
-                <h1 id="nomeUsuario"></h1>
+                    <img id="fotoPerfil" alt="Foto de Perfil"
+                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
+                <div id="info-principal">
+                    <h1 id="nomeUsuario"></h1>
                     <div class="botoesPerfil">
                         <button class="btn-sair" id="botaoEditar" onclick="abrirModal()">Editar perfil</button>
                         <button class="btn-sair" id="botaoSair" onclick="deslogConta()">Sair</button>
@@ -29,8 +30,15 @@
                 </div>
             </div>
             <div id="info-rapida">
-                <div class="card-info"><strong>48k</strong><span>Seguidores</span></div>
-                <div class="card-info"><strong>72</strong><span>Vídeos</span></div>
+                <div class="card-info">
+                    <strong id="totalInscritosPerfil">0</strong>
+                    <span>Inscritos</span>
+                </div>
+
+                <div class="card-info">
+                    <strong id="totalVideosPerfil">0</strong>
+                    <span>Vídeos</span>
+                </div>
             </div>
         </section>
         <div id="modalPerfil">

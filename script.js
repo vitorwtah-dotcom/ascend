@@ -639,6 +639,30 @@ async function inscreverUsuario(canalId) {
     window.location.reload();
 }
 
+async function carregarEstatisticasPerfil() {
+    const parametros = new URLSearchParams(window.location.search);
+    const idPerfil = parametros.get("id");
+
+    const usuarioId = idPerfil || localStorage.getItem("usuarioId");
+
+    if (!usuarioId) return;
+
+    const resposta = await fetch(`${API}/usuarios/${usuarioId}/estatisticas`);
+    const dados = await resposta.json();
+
+    const totalInscritosPerfil = document.getElementById("totalInscritosPerfil");
+    const totalVideosPerfil = document.getElementById("totalVideosPerfil");
+
+    if (totalInscritosPerfil) {
+        totalInscritosPerfil.innerText = dados.total_inscritos || 0;
+    }
+
+    if (totalVideosPerfil) {
+        totalVideosPerfil.innerText = dados.total_videos || 0;
+    }
+}
+
+carregarEstatisticasPerfil();
 carregarVideos();
 carregarPerfil();
 carragarEstatisticas();

@@ -693,6 +693,26 @@ app.post("/usuarios/:id/inscrever", (req, res) => {
     });
 });
 
+app.get("/usuarios/:id/estatisticas", (req, res) => {
+    const id = req.params.id;
+
+    const sql = `
+        SELECT
+            (SELECT COUNT(*) FROM inscritos WHERE canal_id = ?) AS total_inscritos,
+            (SELECT COUNT(*) FROM videos WHERE usuario_id = ?) AS total_videos
+    `;
+
+    db.query(sql, [id, id], (erro, resultado) => {
+        if (erro) {
+            return res.status(500).json({
+                erro: erro.sqlMessage
+            });
+        }
+
+        res.json(resultado[0]);
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
