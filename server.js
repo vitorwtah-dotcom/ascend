@@ -472,6 +472,42 @@ app.put("/perfil/:id", upload.fields([
     }
 });
 
+app.get("/pesquisa", (req, res) => {
+    const termo = `%${req.query.q}%`;
+
+    const sqlUsuarios = `
+        SELECT id, nome, foto_perfil
+        FROM usuarios
+        WHERE nome LIKE ?
+    `;
+
+    const sqlVideos = `
+        SELECT 
+            videos.id,
+            videos.titulo,
+            videos.thumbnail,
+            usuarios.nome
+        FROM videos
+        INNER JOIN usuarios
+        ON videos.usuario_id = usuarios.id
+        WHERE videos.titulo LIKE ? OR videos.descricao LIKE ?
+    `;
+
+    db.query(sqlUsuarios, [termo], (erro, usuarios) => {
+        if (erro) {
+            return res.status(500).json({ erro: erro.sqlMessage });
+        }
+
+        db.query(sqlVideos, [termo, termo], (erro, videos) => {
+            if (erro) {
+                return res.status(500).json({ erro: erro.sqlMessage });
+            }
+
+            res.json({ usuarios, videos });
+        });
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

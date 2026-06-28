@@ -206,7 +206,11 @@ const FOTO_PADRAO = "https://res.cloudinary.com/dyglfqcks/image/upload/v17825988
 const BANNER_PADRAO = "https://res.cloudinary.com/dyglfqcks/image/upload/v1782598823/bannerPadrao_dgzvir.png";
 
 async function carregarPerfil() {
-    const usuarioId = localStorage.getItem("usuarioId");
+
+    const parametros = new URLSearchParams(window.location.search);
+    const idPerfil = parametros.get("id");
+
+    const usuarioId = idPerfil || localStorage.getItem("usuarioId");
 
     if (!usuarioId) return;
 
@@ -229,6 +233,14 @@ async function carregarPerfil() {
         bannerPerfil.src = usuario.banner || BANNER_PADRAO;
     if (bioPerfil)
         bioPerfil.innerHTML = usuario.bio || "Sem bio ainda.";
+
+    const botaoEditar = document.getElementById("botaoEditar");
+
+    if (botaoEditar) {
+        if (idPerfil && idPerfil !== localStorage.getItem("usuarioId")) {
+            botaoEditar.style.display = "none";
+        }
+    }
 
 }
 
@@ -427,6 +439,77 @@ function fecharModal() {
 
     document.getElementById("modalPerfil").style.display = "none";
 
+}
+
+async function pesquisarModal() {
+    const input = document.getElementById("inputPesquisa");
+    const modal = document.getElementById("modalPesquisa");
+
+    if (!input || !modal) return;
+
+    const termo = input.value.trim();
+
+    if (termo.length === 0) {
+        modal.style.display = "none";
+        modal.innerHTML = "";
+        return;
+    }
+
+    try {
+        const resposta = await fetch(`${API}/pesquisa?q=${encodeURIComponent(termo)}`);
+        const dados = await resposta.json();
+
+        console.log("Resultado da pesquisa:", dados);
+
+        modal.innerHTML = "";
+        modal.style.display = "block";
+
+        if (dados.usuarios.length === 0 && dados.videos.length === 0) {
+            modal.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+            return;
+        }
+
+        modal.innerHTML += `<h3>Perfis</h3>`;
+
+        dados.usuarios.forEach(usuario => {
+            modal.innerHTML += `
+                <div class="resultadoItem" onclick="abrirPerfilPesquisa(${usuario.id})">
+                    <img src="${usuario.foto_perfil || FOTO_PADRAO}">
+                    <div>
+                        <strong>${usuario.nome}</strong>
+                        <p>Ver perfil</p>
+                    </div>
+                </div>
+            `;
+        });
+
+        modal.innerHTML += `<h3>Vídeos</h3>`;
+
+        dados.videos.forEach(video => {
+            modal.innerHTML += `
+                <div class="resultadoItem" onclick="abrirVideoPesquisa(${video.id})">
+                    <img src="${video.thumbnail}">
+                    <div>
+                        <strong>${video.titulo}</strong>
+                        <p>${video.nome}</p>
+                    </div>
+                </div>
+            `;
+        });
+
+    } catch (erro) {
+        console.log("Erro na pesquisa:", erro);
+        modal.style.display = "block";
+        modal.innerHTML = "<p>Erro ao pesquisar.</p>";
+    }
+}
+
+function abrirPerfilPesquisa(id) {
+    window.location.href = `perfil.html?id=${id}`;
+}
+
+function abrirVideoPesquisa(id) {
+    window.location.href = `assistir.html?id=${id}`;
 }
 
 carregarVideos();

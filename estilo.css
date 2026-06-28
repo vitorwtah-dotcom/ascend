@@ -247,3 +247,45 @@ h3:hover {
     margin: 10px;
     font-size: 15px;
 }
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+#areaPesquisa {
+    position: relative;
+    z-index: 9999;
+}
+
+#modalPesquisa {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 360px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #111;
+    color: white;
+    border-radius: 12px;
+    padding: 10px;
+    z-index: 99999;
+    box-shadow: 0 10px 30px black;
+}
+
+.resultadoItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.resultadoItem:hover {
+    background: #222;
+}
+
+.resultadoItem img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}

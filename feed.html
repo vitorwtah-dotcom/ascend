@@ -11,9 +11,11 @@
 
 <body>
     <header id="cabecalho">
-        <div>
-            <button id="buttonGerar" onclick="gerarMensagem()">Motivação</button>
-            <input type="text" id="mensagem" placeholder="Inspire-se...">
+        <div id="areaPesquisa">
+            <input type="text" id="inputPesquisa" placeholder="Pesquisar vídeos ou perfis..."
+                oninput="pesquisarModal()">
+
+            <div id="modalPesquisa"></div>
         </div>
         <div id="divPerfil"><img id="icone" src="" alt="Foto de perfil" onclick="window.location.href='perfil.html'">
             <span id="msperfil" style="display:none;">Perfil</span>
