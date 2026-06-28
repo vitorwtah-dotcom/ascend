@@ -249,7 +249,7 @@ async function carregarPerfil() {
             botaoSair.style.display = "none";
         }
     }
-    
+
 
 }
 
@@ -345,6 +345,17 @@ async function carregarVideo() {
     tituloVideo.innerText = video.titulo;
     descricaoVideo.innerText = video.descricao;
     usuarioVideo.innerText = video.usuario;
+
+    const visualizacoesVideo = document.getElementById("visualizacoesVideo");
+    const totalLikes = document.getElementById("totalLikes");
+
+    if (visualizacoesVideo) {
+        visualizacoesVideo.innerText = `${video.visualizacoes || 0} visualizações`;
+    }
+
+    if (totalLikes) {
+        totalLikes.innerText = `${video.total_likes || 0} likes`;
+    }
 
     fotoAutor.src =
         video.foto_perfil || FOTO_PADRAO;
@@ -519,6 +530,32 @@ function abrirPerfilPesquisa(id) {
 
 function abrirVideoPesquisa(id) {
     window.location.href = `assistir.html?id=${id}`;
+}
+
+async function darLike() {
+    const parametros = new URLSearchParams(window.location.search);
+    const videoId = parametros.get("id");
+
+    const usuarioId = localStorage.getItem("usuarioId");
+
+    if (!usuarioId) {
+        alert("Você precisa estar logado para curtir.");
+        return;
+    }
+
+    const resposta = await fetch(`${API}/videos/${videoId}/like`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            usuario_id: usuarioId
+        })
+    });
+
+    const dados = await resposta.json();
+
+    carregarVideo();
 }
 
 carregarVideos();

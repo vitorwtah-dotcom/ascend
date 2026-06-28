@@ -80,6 +80,23 @@ db.connect((erro) => {
             console.log("Erro bio:", erro.sqlMessage);
         }
     });
+
+    db.query(`ALTER TABLE videos ADD COLUMN visualizacoes INT DEFAULT 0`, (erro) => {
+        if (erro && erro.code !== "ER_DUP_FIELDNAME") {
+            console.log("Erro visualizacoes:", erro.sqlMessage);
+        }
+    });
+
+    db.query(`
+    CREATE TABLE IF NOT EXISTS likes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        usuario_id INT NOT NULL,
+        video_id INT NOT NULL,
+        UNIQUE KEY like_unico (usuario_id, video_id),
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+        FOREIGN KEY (video_id) REFERENCES videos(id)
+    );
+`);
 });
 
 let i = 1
@@ -389,6 +406,11 @@ app.get("/videos", function (req, res) {
 app.get("/videos/:id", function (req, res) {
     const id = req.params.id;
 
+    db.query(
+        "UPDATE videos SET visualizacoes = visualizacoes + 1 WHERE id = ?",
+        [id]
+    );
+
     const sql = `
     SELECT videos.*,
     usuarios.id AS usuario_id,
@@ -505,6 +527,46 @@ app.get("/pesquisa", (req, res) => {
 
             res.json({ usuarios, videos });
         });
+    });
+});
+
+app.post("/videos/:id/like", (req, res) => {
+    const video_id = req.params.id;
+    const { usuario_id } = req.body;
+
+    if (!usuario_id) {
+        return res.status(400).json({
+            mensagem: "Usuário não informado"
+        });
+    }
+
+    const sqlVerificar = `
+        SELECT * FROM likes
+        WHERE usuario_id = ? AND video_id = ?
+    `;
+
+    db.query(sqlVerificar, [usuario_id, video_id], (erro, resultado) => {
+        if (erro) {
+            return res.status(500).json({ erro: erro.sqlMessage });
+        }
+
+        if (resultado.length > 0) {
+            db.query(
+                "DELETE FROM likes WHERE usuario_id = ? AND video_id = ?",
+                [usuario_id, video_id],
+                () => {
+                    res.json({ curtido: false });
+                }
+            );
+        } else {
+            db.query(
+                "INSERT INTO likes (usuario_id, video_id) VALUES (?, ?)",
+                [usuario_id, video_id],
+                () => {
+                    res.json({ curtido: true });
+                }
+            );
+        }
     });
 });
 
