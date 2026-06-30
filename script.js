@@ -724,8 +724,8 @@ async function carregarVideosPerfil() {
                 <a href="assistir.html?id=${video.id}">
                     <img
                         src="${video.thumbnail}"
-                        width="300"
-                        height="180">
+                        width="280"
+                        height="160">
                 </a>
 
                 <h3>${video.titulo}</h3>

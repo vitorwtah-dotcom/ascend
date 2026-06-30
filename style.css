@@ -260,7 +260,7 @@ textarea:focus {
 #topo {
     width: 1200px;
     max-width: 1500px;
-    height: 600px;
+    height: fit-content;
 
     margin: 40px auto;
 
@@ -1126,4 +1126,22 @@ button:hover {
     white-space: pre-wrap;
     word-wrap: break-word;
 
+}
+
+#listaVideosPerfil {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 40px;
+    justify-content: center;
+}
+
+#H2Perfil {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    text-align: center;
+    background: rgba(15, 20, 35, .82);
+    border: 1pt solid #5a8cff;
 }
