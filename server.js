@@ -694,25 +694,79 @@ app.post("/usuarios/:id/inscrever", (req, res) => {
 });
 
 app.get("/usuarios/:id/estatisticas", (req, res) => {
+
+    const canalId = req.params.id;
+    const usuarioLogado = req.query.usuario;
+
+    const sql = `
+        SELECT
+
+        (SELECT COUNT(*)
+         FROM inscritos
+         WHERE canal_id = ?) AS total_inscritos,
+
+        (SELECT COUNT(*)
+         FROM videos
+         WHERE usuario_id = ?) AS total_videos,
+
+        EXISTS(
+            SELECT 1
+            FROM inscritos
+            WHERE canal_id = ?
+            AND inscrito_id = ?
+        ) AS usuario_inscrito
+    `;
+
+    db.query(
+        sql,
+        [canalId, canalId, canalId, usuarioLogado],
+        (erro, resultado) => {
+
+            if (erro) {
+                return res.status(500).json({
+                    erro: erro.sqlMessage
+                });
+            }
+
+            res.json(resultado[0]);
+        }
+    );
+
+});
+
+app.get("/usuarios/:id/videos", (req, res) => {
+
     const id = req.params.id;
 
     const sql = `
         SELECT
-            (SELECT COUNT(*) FROM inscritos WHERE canal_id = ?) AS total_inscritos,
-            (SELECT COUNT(*) FROM videos WHERE usuario_id = ?) AS total_videos
+            videos.*,
+            usuarios.nome,
+            usuarios.foto_perfil
+
+        FROM videos
+
+        INNER JOIN usuarios
+        ON videos.usuario_id = usuarios.id
+
+        WHERE usuario_id = ?
+
+        ORDER BY data_postagem DESC
     `;
 
-    db.query(sql, [id, id], (erro, resultado) => {
+    db.query(sql, [id], (erro, resultado) => {
+
         if (erro) {
             return res.status(500).json({
                 erro: erro.sqlMessage
             });
         }
 
-        res.json(resultado[0]);
-    });
-});
+        res.json(resultado);
 
+    });
+
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

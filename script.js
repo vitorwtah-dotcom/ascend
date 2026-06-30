@@ -250,6 +250,35 @@ async function carregarPerfil() {
         }
     }
 
+    const botaoInscrever = document.getElementById("botaoInscreverPerfil");
+    const usuarioLogado = localStorage.getItem("usuarioId");
+
+    if (botaoInscrever) {
+
+        if (usuarioId != usuarioLogado) {
+
+            botaoInscrever.style.display = "inline-block";
+
+            const resposta = await fetch(`${API}/usuarios/${usuarioId}/estatisticas`);
+            const dados = await resposta.json();
+
+            if (dados.usuario_inscrito) {
+                botaoInscrever.innerText = "Inscrito";
+                botaoInscrever.classList.add("inscrito");
+            } else {
+                botaoInscrever.innerText = "Inscrever-se";
+                botaoInscrever.classList.remove("inscrito");
+            }
+
+            botaoInscrever.onclick = () => {
+                inscreverUsuario(usuarioId);
+            };
+
+        } else {
+            botaoInscrever.style.display = "none";
+        }
+
+    }
 
 }
 
@@ -662,6 +691,54 @@ async function carregarEstatisticasPerfil() {
     }
 }
 
+async function carregarVideosPerfil() {
+
+    const lista = document.getElementById("listaVideosPerfil");
+
+    if (!lista) return;
+
+    const parametros = new URLSearchParams(window.location.search);
+
+    const usuario =
+        parametros.get("id") ||
+        localStorage.getItem("usuarioId");
+
+    const resposta = await fetch(`${API}/usuarios/${usuario}/videos`);
+
+    const videos = await resposta.json();
+
+    lista.innerHTML = "";
+
+    if (videos.length === 0) {
+
+        lista.innerHTML = "<p>Este usuário ainda não publicou vídeos.</p>";
+
+        return;
+    }
+
+    videos.forEach(video => {
+
+        lista.innerHTML += `
+            <div class="video">
+
+                <a href="assistir.html?id=${video.id}">
+                    <img
+                        src="${video.thumbnail}"
+                        width="300"
+                        height="180">
+                </a>
+
+                <h3>${video.titulo}</h3>
+
+                <p>${video.visualizacoes} visualizações</p>
+
+            </div>
+        `;
+
+    });
+
+}
+carregarVideosPerfil();
 carregarEstatisticasPerfil();
 carregarVideos();
 carregarPerfil();
