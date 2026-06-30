@@ -301,8 +301,12 @@ if (formPost) {
 
         const resultado = await resposta.json();
 
-        alert(resultado.mensagem);
+        if (!resposta.ok) {
+            alert(resultado.mensagem);
+            return;
+        }
 
+        alert(resultado.mensagem);
         window.location.href = "feed.html";
     });
 };

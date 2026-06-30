@@ -356,6 +356,17 @@ app.post("/upload-video", upload.fields([
             folder: "ascend/videos"
         });
 
+        if (uploadVideo.height > uploadVideo.width) {
+
+            await cloudinary.uploader.destroy(uploadVideo.public_id, {
+                resource_type: "video"
+            });
+
+            return res.status(400).json({
+                mensagem: "Só é permitido enviar vídeos horizontais."
+            });
+        }
+
         const uploadThumbnail = await cloudinary.uploader.upload(req.files.thumbnail[0].path, {
             resource_type: "image",
             folder: "ascend/thumbnails"
