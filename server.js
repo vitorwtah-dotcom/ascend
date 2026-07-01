@@ -185,28 +185,79 @@ app.get("/usuarios", (req, res) => {
 })
 
 app.delete("/usuarios/:id", (req, res) => {
+
     const id = req.params.id;
 
-    db.query("DELETE FROM usuarios WHERE id = ?", [id], (erro, resultado) => {
+    db.query(
+        "DELETE FROM likes WHERE usuario_id = ?",
+        [id],
+        (erro) => {
 
-        if (erro) {
-            console.log(erro);
+            if (erro) {
+                return res.status(500).json({ erro: erro.sqlMessage });
+            }
 
-            return res.status(500).json({
-                erro: erro.sqlMessage
-            });
+            db.query(
+                "DELETE FROM inscritos WHERE inscrito_id = ? OR canal_id = ?",
+                [id, id],
+                (erro) => {
+
+                    if (erro) {
+                        return res.status(500).json({ erro: erro.sqlMessage });
+                    }
+
+                    db.query(
+                        "DELETE FROM likes WHERE video_id IN (SELECT id FROM videos WHERE usuario_id = ?)",
+                        [id],
+                        (erro) => {
+
+                            if (erro) {
+                                return res.status(500).json({ erro: erro.sqlMessage });
+                            }
+
+                            db.query(
+                                "DELETE FROM videos WHERE usuario_id = ?",
+                                [id],
+                                (erro) => {
+
+                                    if (erro) {
+                                        return res.status(500).json({ erro: erro.sqlMessage });
+                                    }
+
+                                    db.query(
+                                        "DELETE FROM usuarios WHERE id = ?",
+                                        [id],
+                                        (erro, resultado) => {
+
+                                            if (erro) {
+                                                return res.status(500).json({ erro: erro.sqlMessage });
+                                            }
+
+                                            if (resultado.affectedRows === 0) {
+                                                return res.status(404).json({
+                                                    erro: "Usuário não encontrado!"
+                                                });
+                                            }
+
+                                            res.json({
+                                                mensagem: "Usuário removido com sucesso!"
+                                            });
+
+                                        }
+                                    );
+
+                                }
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
         }
+    );
 
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({
-                erro: "Usuário não encontrado!"
-            });
-        }
-
-        res.json({
-            mensagem: "Usuário removido!"
-        });
-    });
 });
 
 
