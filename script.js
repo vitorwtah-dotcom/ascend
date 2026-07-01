@@ -720,28 +720,70 @@ async function carregarVideosPerfil() {
         return;
     }
 
+    const usuarioLogado = localStorage.getItem("usuarioId");
+
     videos.forEach(video => {
 
+        const podeExcluir = Number(video.usuario_id) === Number(usuarioLogado);
+
         lista.innerHTML += `
-            <div class="video">
+        <div class="video">
 
-                <a href="assistir.html?id=${video.id}">
-                    <img
-                        src="${video.thumbnail}"
-                        width="280"
-                        height="160">
-                </a>
+            <a href="assistir.html?id=${video.id}">
+                <img
+                    src="${video.thumbnail}"
+                    width="300"
+                    height="180">
+            </a>
 
-                <h3>${video.titulo}</h3>
+            <h3>${video.titulo}</h3>
 
-                <p>${video.visualizacoes} visualizações</p>
+            <p>${video.visualizacoes} visualizações</p>
 
-            </div>
-        `;
+            ${podeExcluir
+                ? `<button onclick="excluirVideo(${video.id})">
+                        Excluir vídeo
+                       </button>`
+                : ""
+            }
+
+        </div>
+    `;
+
+    });
+};
+
+async function excluirVideo(id) {
+
+    if (!confirm("Deseja realmente excluir este vídeo?")) {
+        return;
+    }
+
+    const usuario_id = localStorage.getItem("usuarioId");
+
+    const resposta = await fetch(`${API}/videos/${id}`, {
+
+        method: "DELETE",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            usuario_id
+        })
 
     });
 
-}
+    const dados = await resposta.json();
+
+    alert(dados.mensagem);
+
+    carregarVideosPerfil();
+    carregarEstatisticasPerfil();
+
+};
+
 carregarVideosPerfil();
 carregarEstatisticasPerfil();
 carregarVideos();

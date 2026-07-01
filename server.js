@@ -778,6 +778,39 @@ app.get("/usuarios/:id/videos", (req, res) => {
     });
 
 });
+
+app.delete("/videos/:id", (req, res) => {
+
+    const id = req.params.id;
+    const { usuario_id } = req.body;
+
+    const sql = `
+        DELETE FROM videos
+        WHERE id = ?
+        AND usuario_id = ?
+    `;
+
+    db.query(sql, [id, usuario_id], (erro, resultado) => {
+
+        if (erro) {
+            return res.status(500).json({
+                erro: erro.sqlMessage
+            });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: "Vídeo não encontrado."
+            });
+        }
+
+        res.json({
+            mensagem: "Vídeo removido com sucesso!"
+        });
+
+    });
+
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
