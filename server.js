@@ -186,21 +186,27 @@ app.get("/usuarios", (req, res) => {
 
 app.delete("/usuarios/:id", (req, res) => {
     const id = req.params.id;
-    db.query("DELETE FROM usuarios WHERE id = ?",
-        [id], (erro, resultado) => {
-            if (erro) {
-                return res.status(500).json({
-                    erro: erro.sqlMessage
-                });
-            } if (resultado.affectedRows === 0) {
-                return res.status(404).json({
-                    erro: "Usuário não encontrado!"
-                });
-            }
-            res.json({
-                mensagem: "Usuário removido!"
+
+    db.query("DELETE FROM usuarios WHERE id = ?", [id], (erro, resultado) => {
+
+        if (erro) {
+            console.log(erro);
+
+            return res.status(500).json({
+                erro: erro.sqlMessage
             });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                erro: "Usuário não encontrado!"
+            });
+        }
+
+        res.json({
+            mensagem: "Usuário removido!"
         });
+    });
 });
 
 
