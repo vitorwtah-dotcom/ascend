@@ -762,27 +762,28 @@ async function excluirVideo(id) {
     const usuario_id = localStorage.getItem("usuarioId");
 
     const resposta = await fetch(`${API}/videos/${id}`, {
-
         method: "DELETE",
-
         headers: {
             "Content-Type": "application/json"
         },
-
-        body: JSON.stringify({
-            usuario_id
-        })
-
+        body: JSON.stringify({ usuario_id })
     });
 
     const dados = await resposta.json();
+
+    console.log("Status:", resposta.status);
+    console.log("Resposta:", dados);
+
+    if (!resposta.ok) {
+        alert(dados.mensagem || dados.erro || "Erro ao excluir vídeo.");
+        return;
+    }
 
     alert(dados.mensagem);
 
     carregarVideosPerfil();
     carregarEstatisticasPerfil();
-
-};
+}
 
 carregarVideosPerfil();
 carregarEstatisticasPerfil();
