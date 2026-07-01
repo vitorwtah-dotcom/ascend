@@ -329,7 +329,7 @@ async function carregarVideos() {
 
             <div class="videoParente">
             <a href="assistir.html?id=${video.id}">
-                <img class="video-thumbnail" src="${video.thumbnail}" width="300" height="200">
+                <img class="video-thumbnail" src="${video.thumbnail}" width="300" height="250">
             </a>
 
             <div id="informations">
