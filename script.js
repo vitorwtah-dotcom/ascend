@@ -742,7 +742,7 @@ async function carregarVideosPerfil() {
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            margin-top: 0;
+            margin-top: 10px;
         }
 
         </style>
