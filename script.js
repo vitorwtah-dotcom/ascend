@@ -727,6 +727,26 @@ async function carregarVideosPerfil() {
         const podeExcluir = Number(video.usuario_id) === Number(usuarioLogado);
 
         lista.innerHTML += `
+
+        <style>
+
+        .buttonExcluir {
+            padding: 8px 12px;
+            background-color: #00144123;
+            border: 1px solid #5a8cff;
+            border-radius: 8px;
+            color: #f5f5f5;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0;
+        }
+
+        </style>
+
         <div class="video">
 
             <a href="assistir.html?id=${video.id}">
@@ -740,12 +760,7 @@ async function carregarVideosPerfil() {
 
             <p>${video.visualizacoes} visualizações</p>
 
-            ${podeExcluir
-                ? `<button onclick="excluirVideo(${video.id})">
-                        Excluir vídeo
-                       </button>`
-                : ""
-            }
+            ${podeExcluir ? `<button class="buttonExcluir" onclick="excluirVideo(${video.id})">Excluir vídeo</button>` : ""}
 
         </div>
     `;
