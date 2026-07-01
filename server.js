@@ -784,73 +784,24 @@ app.delete("/videos/:id", (req, res) => {
     const id = req.params.id;
     const { usuario_id } = req.body;
 
-    const sql = `
-        DELETE FROM videos
-        WHERE id = ?
-        AND usuario_id = ?
-    `;
+    db.query(
+        "DELETE FROM likes WHERE video_id = ?",
+        [id],
+        (erro) => {
 
-    db.query(sql, [id, usuario_id], (erro, resultado) => {
-
-        if (erro) {
-            return res.status(500).json({
-                erro: erro.sqlMessage
-            });
-        }
-
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({
-                mensagem: "Vídeo não encontrado."
-            });
-        }
-
-        res.json({
-            mensagem: "Vídeo removido com sucesso!"
-        });
-
-    });
-
-});
-
-app.get("/corrigir-fk-likes", (req, res) => {
-
-    db.query("SHOW CREATE TABLE likes", (erro, resultado) => {
-
-        if (erro) {
-            return res.status(500).json({
-                erro: erro.sqlMessage
-            });
-        }
-
-        const createTable = resultado[0]["Create Table"];
-
-        const match = createTable.match(/CONSTRAINT `(.*?)` FOREIGN KEY \(`video_id`\)/);
-
-        if (!match) {
-            return res.json({
-                mensagem: "Não foi encontrada a FK de video_id."
-            });
-        }
-
-        const nomeFK = match[1];
-
-        db.query(
-            `ALTER TABLE likes DROP FOREIGN KEY \`${nomeFK}\``,
-            (erro) => {
-
-                if (erro) {
-                    return res.status(500).json({
-                        erro: erro.sqlMessage
-                    });
-                }
-
-                db.query(`
-                    ALTER TABLE likes
-                    ADD CONSTRAINT \`${nomeFK}\`
-                    FOREIGN KEY (video_id)
-                    REFERENCES videos(id)
-                    ON DELETE CASCADE
-                `, (erro) => {
+            if (erro) {
+                return res.status(500).json({
+                    erro: erro.sqlMessage
+                });
+            }
+            db.query(
+                `
+                DELETE FROM videos
+                WHERE id = ?
+                AND usuario_id = ?
+                `,
+                [id, usuario_id],
+                (erro, resultado) => {
 
                     if (erro) {
                         return res.status(500).json({
@@ -858,18 +809,24 @@ app.get("/corrigir-fk-likes", (req, res) => {
                         });
                     }
 
+                    if (resultado.affectedRows === 0) {
+                        return res.status(404).json({
+                            mensagem: "Vídeo não encontrado."
+                        });
+                    }
+
                     res.json({
-                        mensagem: "Foreign key alterada com sucesso!"
+                        mensagem: "Vídeo removido com sucesso!"
                     });
 
-                });
+                }
+            );
 
-            }
-        );
-
-    });
+        }
+    );
 
 });
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
